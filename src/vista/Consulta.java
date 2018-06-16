@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -40,7 +41,7 @@ public class Consulta extends JFrame{
     private static final int ANCHOC=130,ALTOC=30;
     DefaultTableModel tm;
     
-    public void consulta(){
+    public Consulta(){
         super("Inventario");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
@@ -141,7 +142,89 @@ public class Consulta extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 FiltroDao fd=new FiltroDao();
-                Filtro f=new Filtro(codigo.getText(), marca.setSelectedItem().toString,Integer.parseInt(stock.getText()),true);
+                Filtro f=new Filtro(codigo.getText(), marca.getSelectedItem().toString(), Integer.parseInt(stock.getText()), true);
+                if(no.isSelected()){
+                    f.setExixtencia(false);
+                }
+                if(fd.create(f)){
+                    JOptionPane.showMessageDialog(null, "filtro registrado con exito");
+                    limpiarCampos();
+                    llenarTabla();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Ocurrio un problema al momento de crear el filtro");
+                }
+            }
+        });
+        actualizar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FiltroDao fd=new FiltroDao();
+                Filtro f=new Filtro(codigo.getText(), marca.getSelectedItem().toString(), Integer.parseInt(stock.getText()), true);
+                if(no.isSelected()){
+                    f.setExixtencia(false);
+                }
+                if(fd.update(f)){
+                    JOptionPane.showMessageDialog(null, "filtro modificado con exito");
+                    limpiarCampos();
+                    llenarTabla();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Ocurrio un problema al momento de modificar el filtro");
+                }
+            }
+        });
+        
+        eliminar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FiltroDao fd=new FiltroDao();
+                if(fd.delete(codigo.getText())){
+                    JOptionPane.showMessageDialog(null, "Filtro eliminado con exito");
+                    limpiarCampos();
+                    llenarTabla();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Ocurrio un problema al momento de eliminar el filtro");
+                }
+            }
+        });
+        buscar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+             FiltroDao fd=new FiltroDao();
+             Filtro f=fd.read(codigo.getText());
+             if(f==null){
+                 JOptionPane.showMessageDialog(null, "El filtro buscado no se ha encontrado");
+             }else{
+                 codigo.setText(f.getCodigo());
+                 marca.setSelectedItem(f.getMarca());
+                 stock.setText(Integer.toString(f.getStock()));
+                 if(f.getExixtencia()){
+                     si.setSelected(true);
+                 }else{
+                     no.setSelected(true);
+                 }
+             }
+             
+            }
+        });  
+        limpiar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                limpiarCampos();
+            }
+        });
+        
+        
+    }
+    public void limpiarCampos(){
+        codigo.setText("");
+        marca.setSelectedItem("FRAM");
+        stock.setText("");
+    }
+    public static void main(String[] args){
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new Consulta().setVisible(true);
             }
         });
     }

@@ -27,9 +27,10 @@ public class Filtro {
         this.exixtencia = exixtencia;
     }
 
-    public Filtro(String codigo, String marca, boolean exixtencia) {
+    public Filtro(String codigo, String marca,int stock, boolean exixtencia) {
         this.codigo = codigo;
         this.marca = marca;
+        this.stock=stock;
         this.exixtencia = exixtencia;
     }
 

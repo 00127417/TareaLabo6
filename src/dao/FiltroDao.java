@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import modelo.Filtro;
-import sun.util.logging.PlatformLogger;
 
 /**
  *
@@ -51,7 +50,7 @@ public class FiltroDao implements metodos<Filtro>{
     }
 
     @Override
-    public boolean delete(Filtro key) {
+    public boolean delete(Object key) {
         PreparedStatement ps;
         try{
             ps=con.getCnx().prepareStatement(SQL_DELETE);
